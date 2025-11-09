@@ -203,24 +203,40 @@
         </div>
         <div class="hand-animation-container">
             <div class="hand-wrapper">
-                <div class="hand-model hand-open-animation" id="hand-open-model">
-                    <!-- 3D Hand Video Model -->
-                    <video id="hand-open-video" class="hand-video" autoplay loop muted playsinline>
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-open.mp4" type="video/mp4">
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-open.webm" type="video/webm">
-                        <!-- Fallback SVG if video not available -->
-                        <svg viewBox="0 0 200 300" class="hand-svg">
-                            <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
-                            <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
-                            <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
-                            <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
-                            <ellipse cx="125" cy="185" rx="12" ry="20" fill="#d4a574" transform="rotate(35 125 185)"/>
-                            <rect x="110" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(15 119 175)"/>
-                            <rect x="95" y="155" width="18" height="35" rx="9" fill="#d4a574" transform="rotate(5 104 172)"/>
-                            <rect x="80" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(-5 89 175)"/>
-                            <rect x="65" y="165" width="15" height="25" rx="7.5" fill="#d4a574" transform="rotate(-10 72.5 177)"/>
-                        </svg>
-                    </video>
+                    <div class="hand-model hand-open-animation" id="hand-open-model">
+                    <!-- Hand SVG Model -->
+                    <svg class="hand-root" viewBox="0 0 300 300" aria-hidden="false" role="img">
+                        <g class="palm">
+                            <ellipse cx="150" cy="200" rx="45" ry="30" fill="#f5f5dc"/>
+                            <rect x="105" y="185" width="90" height="25" rx="12" fill="#f5f5dc"/>
+                            <rect x="110" y="190" width="80" height="4" fill="#3b82f6"/>
+                        </g>
+                        <g class="finger finger-index" data-finger="index">
+                            <rect class="phalange phalange-1" x="135" y="140" width="20" height="35" rx="10" fill="#d4a574" transform-origin="145 157.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-2" x="135" y="105" width="18" height="35" rx="9" fill="#d4a574" transform-origin="144 122.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-3" x="135" y="70" width="16" height="35" rx="8" fill="#d4a574" transform-origin="143 87.5" transform="rotate(0)"/>
+                        </g>
+                        <g class="finger finger-middle" data-finger="middle">
+                            <rect class="phalange phalange-1" x="155" y="135" width="20" height="35" rx="10" fill="#d4a574" transform-origin="165 152.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-2" x="155" y="100" width="18" height="35" rx="9" fill="#d4a574" transform-origin="164 117.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-3" x="155" y="65" width="16" height="35" rx="8" fill="#d4a574" transform-origin="163 82.5" transform="rotate(0)"/>
+                        </g>
+                        <g class="finger finger-ring" data-finger="ring">
+                            <rect class="phalange phalange-1" x="175" y="140" width="20" height="35" rx="10" fill="#d4a574" transform-origin="185 157.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-2" x="175" y="105" width="18" height="35" rx="9" fill="#d4a574" transform-origin="184 122.5" transform="rotate(0)"/>
+                            <rect class="phalange phalange-3" x="175" y="70" width="16" height="35" rx="8" fill="#d4a574" transform-origin="183 87.5" transform="rotate(0)"/>
+                        </g>
+                        <g class="finger finger-pinky" data-finger="pinky">
+                            <rect class="phalange phalange-1" x="195" y="145" width="18" height="30" rx="9" fill="#d4a574" transform-origin="204 160" transform="rotate(0)"/>
+                            <rect class="phalange phalange-2" x="195" y="115" width="16" height="30" rx="8" fill="#d4a574" transform-origin="203 130" transform="rotate(0)"/>
+                            <rect class="phalange phalange-3" x="195" y="85" width="14" height="30" rx="7" fill="#d4a574" transform-origin="202 100" transform="rotate(0)"/>
+                        </g>
+                        <g class="thumb" data-finger="thumb">
+                            <rect class="phalange th-1" x="100" y="170" width="18" height="25" rx="9" fill="#d4a574" transform-origin="109 182.5" transform="rotate(0)"/>
+                            <rect class="phalange th-2" x="85" y="160" width="16" height="25" rx="8" fill="#d4a574" transform-origin="93 172.5" transform="rotate(0)"/>
+                            <rect class="phalange th-3" x="70" y="150" width="14" height="25" rx="7" fill="#d4a574" transform-origin="77 162.5" transform="rotate(0)"/>
+                        </g>
+                    </svg>
                 </div>
             </div>
             <div class="animation-status">
@@ -248,21 +264,39 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-close-animation" id="hand-close-model">
-                    <video id="hand-close-video" class="hand-video" autoplay loop muted playsinline>
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-close.mp4" type="video/mp4">
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-close.webm" type="video/webm">
-                        <svg viewBox="0 0 200 300" class="hand-svg">
-                            <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
-                            <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
-                            <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
-                            <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
-                            <ellipse cx="120" cy="190" rx="12" ry="20" fill="#d4a574" transform="rotate(60 120 190)"/>
-                            <rect x="110" y="170" width="18" height="25" rx="9" fill="#d4a574" transform="rotate(45 119 182)"/>
-                            <rect x="95" y="175" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(50 104 190)"/>
-                            <rect x="80" y="175" width="18" height="25" rx="9" fill="#d4a574" transform="rotate(45 89 187)"/>
-                            <rect x="65" y="175" width="15" height="20" rx="7.5" fill="#d4a574" transform="rotate(40 72.5 185)"/>
-                        </svg>
-                    </video>
+                    <!-- Hand SVG Model -->
+                    <svg class="hand-root" viewBox="0 0 300 300" aria-hidden="false" role="img">
+                        <g class="palm">
+                            <ellipse cx="150" cy="200" rx="45" ry="30" fill="#f5f5dc"/>
+                            <rect x="105" y="185" width="90" height="25" rx="12" fill="#f5f5dc"/>
+                            <rect x="110" y="190" width="80" height="4" fill="#3b82f6"/>
+                        </g>
+                        <g class="finger finger-index" data-finger="index">
+                            <rect class="phalange phalange-1" x="135" y="140" width="20" height="35" rx="10" fill="#d4a574" transform-origin="145 157.5" transform="rotate(-30)"/>
+                            <rect class="phalange phalange-2" x="135" y="105" width="18" height="35" rx="9" fill="#d4a574" transform-origin="144 122.5" transform="rotate(-60)"/>
+                            <rect class="phalange phalange-3" x="135" y="70" width="16" height="35" rx="8" fill="#d4a574" transform-origin="143 87.5" transform="rotate(-90)"/>
+                        </g>
+                        <g class="finger finger-middle" data-finger="middle">
+                            <rect class="phalange phalange-1" x="155" y="135" width="20" height="35" rx="10" fill="#d4a574" transform-origin="165 152.5" transform="rotate(-25)"/>
+                            <rect class="phalange phalange-2" x="155" y="100" width="18" height="35" rx="9" fill="#d4a574" transform-origin="164 117.5" transform="rotate(-50)"/>
+                            <rect class="phalange phalange-3" x="155" y="65" width="16" height="35" rx="8" fill="#d4a574" transform-origin="163 82.5" transform="rotate(-75)"/>
+                        </g>
+                        <g class="finger finger-ring" data-finger="ring">
+                            <rect class="phalange phalange-1" x="175" y="140" width="20" height="35" rx="10" fill="#d4a574" transform-origin="185 157.5" transform="rotate(-20)"/>
+                            <rect class="phalange phalange-2" x="175" y="105" width="18" height="35" rx="9" fill="#d4a574" transform-origin="184 122.5" transform="rotate(-40)"/>
+                            <rect class="phalange phalange-3" x="175" y="70" width="16" height="35" rx="8" fill="#d4a574" transform-origin="183 87.5" transform="rotate(-60)"/>
+                        </g>
+                        <g class="finger finger-pinky" data-finger="pinky">
+                            <rect class="phalange phalange-1" x="195" y="145" width="18" height="30" rx="9" fill="#d4a574" transform-origin="204 160" transform="rotate(-15)"/>
+                            <rect class="phalange phalange-2" x="195" y="115" width="16" height="30" rx="8" fill="#d4a574" transform-origin="203 130" transform="rotate(-30)"/>
+                            <rect class="phalange phalange-3" x="195" y="85" width="14" height="30" rx="7" fill="#d4a574" transform-origin="202 100" transform="rotate(-45)"/>
+                        </g>
+                        <g class="thumb" data-finger="thumb">
+                            <rect class="phalange th-1" x="100" y="170" width="18" height="25" rx="9" fill="#d4a574" transform-origin="109 182.5" transform="rotate(-30)"/>
+                            <rect class="phalange th-2" x="85" y="160" width="16" height="25" rx="8" fill="#d4a574" transform-origin="93 172.5" transform="rotate(-60)"/>
+                            <rect class="phalange th-3" x="70" y="150" width="14" height="25" rx="7" fill="#d4a574" transform-origin="77 162.5" transform="rotate(-90)"/>
+                        </g>
+                    </svg>
                 </div>
             </div>
             <div class="animation-status">
@@ -290,21 +324,18 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-light-grip-animation" id="hand-light-grip-model">
-                    <video id="hand-light-grip-video" class="hand-video" autoplay loop muted playsinline>
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-light-grip.mp4" type="video/mp4">
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-light-grip.webm" type="video/webm">
-                        <svg viewBox="0 0 200 300" class="hand-svg">
-                            <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
-                            <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
-                            <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
-                            <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
-                            <ellipse cx="125" cy="185" rx="12" ry="20" fill="#d4a574" transform="rotate(35 125 185)"/>
-                            <rect x="110" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(15 119 175)"/>
-                            <rect x="95" y="155" width="18" height="35" rx="9" fill="#d4a574" transform="rotate(5 104 172)"/>
-                            <rect x="80" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(-5 89 175)"/>
-                            <rect x="65" y="165" width="15" height="25" rx="7.5" fill="#d4a574" transform="rotate(-10 72.5 177)"/>
-                        </svg>
-                    </video>
+                    <!-- Hand SVG Model -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
+                        <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
+                        <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
+                        <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
+                        <ellipse cx="125" cy="185" rx="12" ry="20" fill="#d4a574" transform="rotate(35 125 185)"/>
+                        <rect x="110" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(15 119 175)"/>
+                        <rect x="95" y="155" width="18" height="35" rx="9" fill="#d4a574" transform="rotate(5 104 172)"/>
+                        <rect x="80" y="160" width="18" height="30" rx="9" fill="#d4a574" transform="rotate(-5 89 175)"/>
+                        <rect x="65" y="165" width="15" height="25" rx="7.5" fill="#d4a574" transform="rotate(-10 72.5 177)"/>
+                    </svg>
                 </div>
             </div>
             <div class="animation-status">
@@ -332,21 +363,18 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-strong-grip-animation" id="hand-strong-grip-model">
-                    <video id="hand-strong-grip-video" class="hand-video" autoplay loop muted playsinline>
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-strong-grip.mp4" type="video/mp4">
-                        <source src="YOUR_VIDEO_PATH_HERE/hand-strong-grip.webm" type="video/webm">
-                        <svg viewBox="0 0 200 300" class="hand-svg">
-                            <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
-                            <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
-                            <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
-                            <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
-                            <ellipse cx="115" cy="195" rx="12" ry="20" fill="#d4a574" transform="rotate(70 115 195)"/>
-                            <rect x="110" y="175" width="18" height="20" rx="9" fill="#d4a574" transform="rotate(60 119 185)"/>
-                            <rect x="95" y="180" width="18" height="25" rx="9" fill="#d4a574" transform="rotate(65 104 192)"/>
-                            <rect x="80" y="180" width="18" height="20" rx="9" fill="#d4a574" transform="rotate(60 89 190)"/>
-                            <rect x="65" y="180" width="15" height="18" rx="7.5" fill="#d4a574" transform="rotate(55 72.5 189)"/>
-                        </svg>
-                    </video>
+                    <!-- Hand SVG Model -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc"/>
+                        <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc"/>
+                        <rect x="70" y="265" width="60" height="3" fill="#3b82f6"/>
+                        <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574"/>
+                        <ellipse cx="115" cy="195" rx="12" ry="20" fill="#d4a574" transform="rotate(70 115 195)"/>
+                        <rect x="110" y="175" width="18" height="20" rx="9" fill="#d4a574" transform="rotate(60 119 185)"/>
+                        <rect x="95" y="180" width="18" height="25" rx="9" fill="#d4a574" transform="rotate(65 104 192)"/>
+                        <rect x="80" y="180" width="18" height="20" rx="9" fill="#d4a574" transform="rotate(60 89 190)"/>
+                        <rect x="65" y="180" width="15" height="18" rx="7.5" fill="#d4a574" transform="rotate(55 72.5 189)"/>
+                    </svg>
                 </div>
             </div>
             <div class="animation-status">
