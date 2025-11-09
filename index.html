@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SmartHand Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="screen active">
+        <div class="splash-container">
+            <div class="splash-content">
+                <div class="splash-icon-wrapper">
+                    <div class="splash-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M2 12h20"/>
+                        </svg>
+                    </div>
+                </div>
+                <h1 class="splash-title">SmartHand Trainer</h1>
+                <p class="splash-subtitle">Train • Control • Improve</p>
+                <div class="splash-loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bluetooth Connection Screen -->
+    <div id="connection-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('splash-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="connection-title">Connect Device</h1>
+        </div>
+        <div class="screen-content connection-content">
+            <div class="connection-icon-wrapper">
+                <div class="connection-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                    </svg>
+                </div>
+            </div>
+            <h2 class="connection-subtitle" data-i18n="connection-subtitle">Scan for nearby Bluetooth devices</h2>
+            <div id="connection-status" class="connection-status">
+                <div id="scanning-indicator" class="scanning-indicator" style="display: none;">
+                    <div class="spinner"></div>
+                    <p data-i18n="scanning">Scanning...</p>
+                </div>
+                <div id="no-devices" class="no-devices" style="display: none;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v4m0 12v4M2 12h4m12 0h4"/>
+                    </svg>
+                    <p>No devices found</p>
+                </div>
+            </div>
+            <div id="device-list" class="device-list"></div>
+            <button id="scan-btn" class="btn-primary btn-large" onclick="startBluetoothScan()">
+                <span data-i18n="scan">Scan Devices</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Control Panel Screen -->
+    <div id="control-screen" class="screen">
+        <div class="control-header">
+            <div class="connection-status-card">
+                <div class="connection-info">
+                    <div class="connection-icon-small">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                        </svg>
+                    </div>
+                    <div class="connection-details">
+                        <p class="connection-status-text" data-i18n="connected">Connected</p>
+                        <p class="device-name" id="device-name">SmartHand Pro V2</p>
+                    </div>
+                </div>
+                <div class="battery-info">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="16" height="10" rx="2"/>
+                        <line x1="6" y1="11" x2="6" y2="13"/>
+                    </svg>
+                    <span id="battery-level">85%</span>
+                </div>
+            </div>
+        </div>
+        <div class="screen-content">
+            <h2 class="section-title" data-i18n="control">Control Panel</h2>
+            
+            <div class="control-buttons-grid">
+                <button class="control-btn btn-open" onclick="sendCommand('open', event)" data-command="open">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20"/>
+                    </svg>
+                    <span data-i18n="openHand">Open Hand</span>
+                </button>
+                <button class="control-btn btn-close" onclick="sendCommand('close', event)" data-command="close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span data-i18n="closeHand">Close Hand</span>
+                </button>
+                <button class="control-btn btn-light-grip" onclick="sendCommand('light_grip', event)" data-command="light_grip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 12h8M12 8v8"/>
+                    </svg>
+                    <span data-i18n="lightGrip">Light Grip</span>
+                </button>
+                <button class="control-btn btn-strong-grip" onclick="sendCommand('strong_grip', event)" data-command="strong_grip">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span data-i18n="strongGrip">Strong Grip</span>
+                </button>
+                <button class="control-btn btn-stop" onclick="sendCommand('stop', event)" data-command="stop">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <rect x="6" y="6" width="12" height="12" rx="2"/>
+                    </svg>
+                    <span data-i18n="stop">Stop</span>
+                </button>
+            </div>
+
+            <div class="grip-slider-card">
+                <h3 class="slider-title" data-i18n="gripStrength">Grip Strength: <span id="grip-value">50</span>%</h3>
+                <div class="slider-container">
+                    <input type="range" id="grip-slider" min="0" max="100" value="50" class="grip-slider" oninput="updateGripStrength(this.value)">
+                </div>
+            </div>
+
+            <div class="nav-buttons-grid">
+                <button class="nav-card-btn" onclick="showScreen('calibration-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                    <span data-i18n="calibrate">Calibrate</span>
+                </button>
+                <button class="nav-card-btn" onclick="showScreen('training-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20"/>
+                    </svg>
+                    <span data-i18n="training">Training</span>
+                </button>
+                <button class="nav-card-btn" onclick="showScreen('progress-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                    <span data-i18n="progress">Progress</span>
+                </button>
+                <button class="nav-card-btn" onclick="showScreen('logs-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    <span data-i18n="logs">Logs</span>
+                </button>
+                <button class="nav-card-btn" onclick="showScreen('settings-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"/>
+                        <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                    </svg>
+                    <span data-i18n="settings">Settings</span>
+                </button>
+                <button class="nav-card-btn" onclick="showScreen('about-screen')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <span data-i18n="about">About</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Control Button -->
+        <button class="voice-btn" id="voice-btn" onclick="toggleVoiceControl()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Hand Animation Screens -->
+    <!-- Open Hand Animation -->
+    <div id="hand-open-screen" class="screen hand-animation-screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="openHand">Open Hand</h1>
+        </div>
+        <div class="hand-animation-container">
+            <div class="hand-wrapper">
+                <div class="hand-model hand-open-animation" id="hand-open-model">
+                    <!-- 3D Hand Video Model -->
+                    <video id="hand-open-video" class="hand-video" autoplay loop muted playsinline style="display: none;">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-open.mp4" type="video/mp4">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-open.webm" type="video/webm">
+                    </video>
+                    <!-- Fallback SVG - Realistic Human Hand Model -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <defs>
+                            <linearGradient id="skinGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fdbcb4;stop-opacity:1" />
+                                <stop offset="30%" style="stop-color:#f4a582;stop-opacity:1" />
+                                <stop offset="70%" style="stop-color:#d08b5b;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#b87333;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="skinGradientLight" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffe5d9;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#fdbcb4;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f4a582;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="skinGradientDark" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#d08b5b;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#8b5a3c;stop-opacity:1" />
+                            </linearGradient>
+                            <radialGradient id="fingerGradient" cx="50%" cy="30%">
+                                <stop offset="0%" style="stop-color:#ffe5d9;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#f4a582;stop-opacity:1" />
+                            </radialGradient>
+                            <filter id="shadow">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                                <feOffset dx="0" dy="3" result="offsetblur"/>
+                                <feComponentTransfer>
+                                    <feFuncA type="linear" slope="0.4"/>
+                                </feComponentTransfer>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                            <filter id="softShadow">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="1.5"/>
+                                <feOffset dx="0" dy="1" result="offsetblur"/>
+                                <feComponentTransfer>
+                                    <feFuncA type="linear" slope="0.2"/>
+                                </feComponentTransfer>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Wrist Base -->
+                        <ellipse cx="100" cy="280" rx="40" ry="24" fill="url(#skinGradientDark)" class="wrist-base" filter="url(#shadow)"/>
+                        <ellipse cx="100" cy="278" rx="38" ry="22" fill="url(#skinGradient)" class="wrist-base" filter="url(#softShadow)"/>
+                        <ellipse cx="100" cy="270" rx="36" ry="20" fill="url(#skinGradientLight)"/>
+                        <rect x="60" y="256" width="80" height="36" rx="20" fill="url(#skinGradient)" class="wrist" filter="url(#shadow)"/>
+                        <rect x="62" y="258" width="76" height="32" rx="18" fill="url(#skinGradientLight)"/>
+                        <rect x="66" y="262" width="68" height="5" rx="2.5" fill="#2563eb" opacity="0.85" class="wrist-band"/>
+                        <rect x="68" y="264" width="64" height="3" rx="1.5" fill="#3b82f6" opacity="0.6"/>
+                        
+                        <!-- Palm -->
+                        <ellipse cx="100" cy="200" rx="50" ry="40" fill="url(#skinGradientDark)" class="palm" filter="url(#shadow)"/>
+                        <ellipse cx="100" cy="198" rx="48" ry="38" fill="url(#skinGradient)" class="palm" filter="url(#softShadow)"/>
+                        <ellipse cx="95" cy="193" rx="44" ry="34" fill="url(#skinGradientLight)"/>
+                        
+                        <!-- Palm Lines (More Realistic) -->
+                        <path d="M 72 208 Q 82 213 92 208 Q 95 207 98 208" stroke="#8b5a3c" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+                        <path d="M 102 208 Q 112 213 122 208" stroke="#8b5a3c" stroke-width="1.8" fill="none" opacity="0.5" stroke-linecap="round"/>
+                        <path d="M 85 220 Q 95 225 105 220" stroke="#8b5a3c" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+                        <path d="M 90 195 Q 100 200 110 195" stroke="#8b5a3c" stroke-width="1.2" fill="none" opacity="0.3" stroke-linecap="round"/>
+                        
+                        <!-- Thumb (More Realistic) -->
+                        <ellipse cx="128" cy="178" rx="16" ry="24" fill="url(#skinGradientDark)" class="finger thumb" transform="rotate(42 128 178)" filter="url(#shadow)"/>
+                        <ellipse cx="128" cy="178" rx="14" ry="22" fill="url(#skinGradient)" class="finger thumb" transform="rotate(42 128 178)" filter="url(#softShadow)"/>
+                        <ellipse cx="128" cy="178" rx="12" ry="18" fill="url(#fingerGradient)" transform="rotate(42 128 178)"/>
+                        <ellipse cx="138" cy="163" rx="14" ry="20" fill="url(#skinGradient)" class="finger thumb-tip" transform="rotate(28 138 163)" filter="url(#shadow)"/>
+                        <ellipse cx="138" cy="163" rx="12" ry="18" fill="url(#skinGradientLight)" transform="rotate(28 138 163)"/>
+                        <ellipse cx="138" cy="163" rx="10" ry="15" fill="url(#fingerGradient)" transform="rotate(28 138 163)"/>
+                        <ellipse cx="145" cy="150" rx="10" ry="14" fill="url(#skinGradient)" filter="url(#shadow)"/>
+                        <ellipse cx="145" cy="150" rx="8" ry="12" fill="url(#skinGradientLight)"/>
+                        <ellipse cx="148" cy="142" rx="6" ry="9" fill="url(#skinGradientDark)" opacity="0.6"/>
+                        
+                        <!-- Index Finger (More Realistic) -->
+                        <ellipse cx="119" cy="167" rx="12" ry="20" fill="url(#skinGradientDark)" class="finger index" transform="rotate(-8 119 167)" filter="url(#shadow)"/>
+                        <ellipse cx="119" cy="167" rx="10" ry="18" fill="url(#skinGradient)" class="finger index" transform="rotate(-8 119 167)" filter="url(#softShadow)"/>
+                        <rect x="106" y="146" width="22" height="38" rx="11" fill="url(#skinGradient)" class="finger index" transform="rotate(-8 119 165)" filter="url(#shadow)"/>
+                        <rect x="108" y="148" width="20" height="36" rx="10" fill="url(#skinGradientLight)" transform="rotate(-8 119 165)"/>
+                        <rect x="110" y="150" width="18" height="34" rx="9" fill="url(#fingerGradient)" transform="rotate(-8 119 167)"/>
+                        <ellipse cx="119" cy="135" rx="11" ry="18" fill="url(#skinGradient)" class="finger index-middle" transform="rotate(-3 119 135)" filter="url(#shadow)"/>
+                        <ellipse cx="119" cy="135" rx="9" ry="16" fill="url(#skinGradientLight)" transform="rotate(-3 119 135)"/>
+                        <rect x="109" y="116" width="18" height="32" rx="9" fill="url(#skinGradient)" class="finger index-middle" transform="rotate(-3 119 132)" filter="url(#shadow)"/>
+                        <rect x="111" y="118" width="16" height="30" rx="8" fill="url(#skinGradientLight)" transform="rotate(-3 119 133)"/>
+                        <rect x="112" y="120" width="14" height="28" rx="7" fill="url(#fingerGradient)" transform="rotate(-3 119 134)"/>
+                        <ellipse cx="119" cy="103" rx="10" ry="16" fill="url(#skinGradient)" class="finger index-tip" filter="url(#shadow)"/>
+                        <ellipse cx="119" cy="103" rx="8" ry="14" fill="url(#skinGradientLight)"/>
+                        <ellipse cx="119" cy="103" rx="7" ry="12" fill="url(#fingerGradient)"/>
+                        <ellipse cx="119" cy="93" rx="6" ry="10" fill="url(#skinGradientDark)" opacity="0.5"/>
+                        <!-- Knuckle -->
+                        <ellipse cx="119" cy="148" rx="4" ry="6" fill="url(#skinGradientDark)" opacity="0.3"/>
+                        
+                        <!-- Middle Finger (More Realistic) -->
+                        <ellipse cx="104" cy="172" rx="12" ry="22" fill="url(#skinGradientDark)" class="finger middle" filter="url(#shadow)"/>
+                        <ellipse cx="104" cy="172" rx="10" ry="20" fill="url(#skinGradient)" class="finger middle" filter="url(#softShadow)"/>
+                        <rect x="92" y="141" width="22" height="44" rx="11" fill="url(#skinGradient)" class="finger middle" filter="url(#shadow)"/>
+                        <rect x="94" y="143" width="20" height="42" rx="10" fill="url(#skinGradientLight)"/>
+                        <rect x="95" y="145" width="18" height="40" rx="9" fill="url(#fingerGradient)"/>
+                        <ellipse cx="104" cy="130" rx="11" ry="19" fill="url(#skinGradient)" class="finger middle-middle" filter="url(#shadow)"/>
+                        <ellipse cx="104" cy="130" rx="9" ry="17" fill="url(#skinGradientLight)"/>
+                        <rect x="94" y="111" width="18" height="34" rx="9" fill="url(#skinGradient)" class="finger middle-middle" filter="url(#shadow)"/>
+                        <rect x="96" y="113" width="16" height="32" rx="8" fill="url(#skinGradientLight)"/>
+                        <rect x="97" y="115" width="14" height="30" rx="7" fill="url(#fingerGradient)"/>
+                        <ellipse cx="104" cy="98" rx="10" ry="17" fill="url(#skinGradient)" class="finger middle-tip" filter="url(#shadow)"/>
+                        <ellipse cx="104" cy="98" rx="8" ry="15" fill="url(#skinGradientLight)"/>
+                        <ellipse cx="104" cy="98" rx="7" ry="13" fill="url(#fingerGradient)"/>
+                        <ellipse cx="104" cy="86" rx="6" ry="10" fill="url(#skinGradientDark)" opacity="0.5"/>
+                        <!-- Knuckles -->
+                        <ellipse cx="104" cy="150" rx="4" ry="6" fill="url(#skinGradientDark)" opacity="0.3"/>
+                        <ellipse cx="104" cy="125" rx="3" ry="5" fill="url(#skinGradientDark)" opacity="0.25"/>
+                        
+                        <!-- Ring Finger (More Realistic) -->
+                        <ellipse cx="89" cy="172" rx="12" ry="20" fill="url(#skinGradientDark)" class="finger ring" transform="rotate(8 89 172)" filter="url(#shadow)"/>
+                        <ellipse cx="89" cy="172" rx="10" ry="18" fill="url(#skinGradient)" class="finger ring" transform="rotate(8 89 172)" filter="url(#softShadow)"/>
+                        <rect x="76" y="146" width="22" height="38" rx="11" fill="url(#skinGradient)" class="finger ring" transform="rotate(8 89 165)" filter="url(#shadow)"/>
+                        <rect x="78" y="148" width="20" height="36" rx="10" fill="url(#skinGradientLight)" transform="rotate(8 89 165)"/>
+                        <rect x="79" y="150" width="18" height="34" rx="9" fill="url(#fingerGradient)" transform="rotate(8 89 167)"/>
+                        <ellipse cx="89" cy="135" rx="11" ry="18" fill="url(#skinGradient)" class="finger ring-middle" transform="rotate(3 89 135)" filter="url(#shadow)"/>
+                        <ellipse cx="89" cy="135" rx="9" ry="16" fill="url(#skinGradientLight)" transform="rotate(3 89 135)"/>
+                        <rect x="79" y="116" width="18" height="32" rx="9" fill="url(#skinGradient)" class="finger ring-middle" transform="rotate(3 89 132)" filter="url(#shadow)"/>
+                        <rect x="81" y="118" width="16" height="30" rx="8" fill="url(#skinGradientLight)" transform="rotate(3 89 133)"/>
+                        <rect x="82" y="120" width="14" height="28" rx="7" fill="url(#fingerGradient)" transform="rotate(3 89 134)"/>
+                        <ellipse cx="89" cy="103" rx="10" ry="16" fill="url(#skinGradient)" class="finger ring-tip" filter="url(#shadow)"/>
+                        <ellipse cx="89" cy="103" rx="8" ry="14" fill="url(#skinGradientLight)"/>
+                        <ellipse cx="89" cy="103" rx="7" ry="12" fill="url(#fingerGradient)"/>
+                        <ellipse cx="89" cy="93" rx="6" ry="10" fill="url(#skinGradientDark)" opacity="0.5"/>
+                        <!-- Knuckle -->
+                        <ellipse cx="89" cy="148" rx="4" ry="6" fill="url(#skinGradientDark)" opacity="0.3"/>
+                        
+                        <!-- Pinky (More Realistic) -->
+                        <ellipse cx="72" cy="175" rx="11" ry="18" fill="url(#skinGradientDark)" class="finger pinky" transform="rotate(12 72 175)" filter="url(#shadow)"/>
+                        <ellipse cx="72" cy="175" rx="9" ry="16" fill="url(#skinGradient)" class="finger pinky" transform="rotate(12 72 175)" filter="url(#softShadow)"/>
+                        <rect x="61" y="151" width="20" height="32" rx="10" fill="url(#skinGradient)" class="finger pinky" transform="rotate(12 72 168)" filter="url(#shadow)"/>
+                        <rect x="63" y="153" width="18" height="30" rx="9" fill="url(#skinGradientLight)" transform="rotate(12 72 167)"/>
+                        <rect x="64" y="155" width="16" height="28" rx="8" fill="url(#fingerGradient)" transform="rotate(12 72 169)"/>
+                        <ellipse cx="72" cy="142" rx="10" ry="16" fill="url(#skinGradient)" class="finger pinky-middle" transform="rotate(8 72 142)" filter="url(#shadow)"/>
+                        <ellipse cx="72" cy="142" rx="8" ry="14" fill="url(#skinGradientLight)" transform="rotate(8 72 142)"/>
+                        <rect x="64" y="126" width="16" height="27" rx="8" fill="url(#skinGradient)" class="finger pinky-middle" transform="rotate(8 72 139)" filter="url(#shadow)"/>
+                        <rect x="66" y="128" width="14" height="25" rx="7" fill="url(#skinGradientLight)" transform="rotate(8 72 140)"/>
+                        <rect x="67" y="130" width="12" height="23" rx="6" fill="url(#fingerGradient)" transform="rotate(8 72 141)"/>
+                        <ellipse cx="72" cy="113" rx="9" ry="14" fill="url(#skinGradient)" class="finger pinky-tip" filter="url(#shadow)"/>
+                        <ellipse cx="72" cy="113" rx="7" ry="12" fill="url(#skinGradientLight)"/>
+                        <ellipse cx="72" cy="113" rx="6" ry="10" fill="url(#fingerGradient)"/>
+                        <ellipse cx="72" cy="103" rx="5" ry="8" fill="url(#skinGradientDark)" opacity="0.5"/>
+                        <!-- Knuckle -->
+                        <ellipse cx="72" cy="155" rx="3" ry="5" fill="url(#skinGradientDark)" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="animation-status">
+                <p class="status-text" data-i18n="opening-hand">Opening Hand...</p>
+                <div class="bluetooth-indicator">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                    </svg>
+                    <span id="open-command-text">Sending: OPEN</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Close Hand Animation -->
+    <div id="hand-close-screen" class="screen hand-animation-screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="closeHand">Close Hand</h1>
+        </div>
+        <div class="hand-animation-container">
+            <div class="hand-wrapper">
+                <div class="hand-model hand-close-animation" id="hand-close-model">
+                    <video id="hand-close-video" class="hand-video" autoplay loop muted playsinline style="display: none;">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-close.mp4" type="video/mp4">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-close.webm" type="video/webm">
+                    </video>
+                    <!-- Fallback SVG - Natural Hand Model (Closed) -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <defs>
+                            <linearGradient id="skinGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f4c2a1;stop-opacity:1" />
+                                <stop offset="50%" style="stop-color:#e8a87c;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#d4a574;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="skinGradientLight2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f8d4b8;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#e8a87c;stop-opacity:1" />
+                            </linearGradient>
+                            <filter id="shadow2">
+                                <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+                                <feOffset dx="0" dy="2" result="offsetblur"/>
+                                <feComponentTransfer>
+                                    <feFuncA type="linear" slope="0.3"/>
+                                </feComponentTransfer>
+                                <feMerge>
+                                    <feMergeNode/>
+                                    <feMergeNode in="SourceGraphic"/>
+                                </feMerge>
+                            </filter>
+                        </defs>
+                        
+                        <!-- Wrist Base -->
+                        <ellipse cx="100" cy="280" rx="38" ry="22" fill="url(#skinGradient2)" class="wrist-base" filter="url(#shadow2)"/>
+                        <ellipse cx="100" cy="270" rx="36" ry="20" fill="url(#skinGradientLight2)"/>
+                        <rect x="62" y="258" width="76" height="32" rx="18" fill="url(#skinGradient2)" class="wrist" filter="url(#shadow2)"/>
+                        <rect x="68" y="263" width="64" height="4" rx="2" fill="#3b82f6" opacity="0.8" class="wrist-band"/>
+                        
+                        <!-- Palm -->
+                        <ellipse cx="100" cy="200" rx="48" ry="38" fill="url(#skinGradient2)" class="palm" filter="url(#shadow2)"/>
+                        <ellipse cx="95" cy="195" rx="42" ry="32" fill="url(#skinGradientLight2)"/>
+                        <path d="M 75 210 Q 85 215 95 210" stroke="#c99a6b" stroke-width="1.5" fill="none" opacity="0.4"/>
+                        <path d="M 105 210 Q 115 215 125 210" stroke="#c99a6b" stroke-width="1.5" fill="none" opacity="0.4"/>
+                        
+                        <!-- Thumb (Closed) -->
+                        <ellipse cx="118" cy="188" rx="14" ry="22" fill="url(#skinGradient2)" class="finger thumb" transform="rotate(58 118 188)" filter="url(#shadow2)"/>
+                        <ellipse cx="118" cy="188" rx="12" ry="18" fill="url(#skinGradientLight2)" transform="rotate(58 118 188)"/>
+                        <ellipse cx="123" cy="173" rx="12" ry="18" fill="url(#skinGradient2)" class="finger thumb-tip" transform="rotate(43 123 173)" filter="url(#shadow2)"/>
+                        <ellipse cx="123" cy="173" rx="10" ry="15" fill="url(#skinGradientLight2)" transform="rotate(43 123 173)"/>
+                        <ellipse cx="127" cy="160" rx="8" ry="12" fill="url(#skinGradient2)" filter="url(#shadow2)"/>
+                        
+                        <!-- Index Finger (Closed) -->
+                        <ellipse cx="119" cy="182" rx="10" ry="18" fill="url(#skinGradient2)" class="finger index" transform="rotate(43 119 182)" filter="url(#shadow2)"/>
+                        <rect x="108" y="168" width="20" height="26" rx="10" fill="url(#skinGradient2)" class="finger index" transform="rotate(43 119 181)" filter="url(#shadow2)"/>
+                        <rect x="110" y="168" width="18" height="24" rx="9" fill="url(#skinGradientLight2)" transform="rotate(43 119 180)"/>
+                        <ellipse cx="119" cy="165" rx="9" ry="16" fill="url(#skinGradient2)" class="finger index-middle" transform="rotate(48 119 165)" filter="url(#shadow2)"/>
+                        <rect x="111" y="153" width="16" height="20" rx="8" fill="url(#skinGradient2)" class="finger index-middle" transform="rotate(48 119 163)" filter="url(#shadow2)"/>
+                        <rect x="112" y="153" width="14" height="18" rx="7" fill="url(#skinGradientLight2)" transform="rotate(48 119 162)"/>
+                        <ellipse cx="118" cy="145" rx="8" ry="12" fill="url(#skinGradient2)" class="finger index-tip" transform="rotate(53 118 145)" filter="url(#shadow2)"/>
+                        <ellipse cx="118" cy="145" rx="7" ry="10" fill="url(#skinGradientLight2)" transform="rotate(53 118 145)"/>
+                        
+                        <!-- Middle Finger (Closed) -->
+                        <ellipse cx="104" cy="190" rx="10" ry="20" fill="url(#skinGradient2)" class="finger middle" transform="rotate(48 104 190)" filter="url(#shadow2)"/>
+                        <rect x="94" y="173" width="20" height="30" rx="10" fill="url(#skinGradient2)" class="finger middle" transform="rotate(48 104 188)" filter="url(#shadow2)"/>
+                        <rect x="95" y="173" width="18" height="28" rx="9" fill="url(#skinGradientLight2)" transform="rotate(48 104 187)"/>
+                        <ellipse cx="104" cy="172" rx="9" ry="17" fill="url(#skinGradient2)" class="finger middle-middle" transform="rotate(53 104 172)" filter="url(#shadow2)"/>
+                        <rect x="96" y="160" width="16" height="24" rx="8" fill="url(#skinGradient2)" class="finger middle-middle" transform="rotate(53 104 172)" filter="url(#shadow2)"/>
+                        <rect x="97" y="160" width="14" height="22" rx="7" fill="url(#skinGradientLight2)" transform="rotate(53 104 171)"/>
+                        <ellipse cx="102" cy="150" rx="8" ry="12" fill="url(#skinGradient2)" class="finger middle-tip" transform="rotate(58 102 150)" filter="url(#shadow2)"/>
+                        <ellipse cx="102" cy="150" rx="7" ry="10" fill="url(#skinGradientLight2)" transform="rotate(58 102 150)"/>
+                        
+                        <!-- Ring Finger (Closed) -->
+                        <ellipse cx="89" cy="187" rx="10" ry="18" fill="url(#skinGradient2)" class="finger ring" transform="rotate(43 89 187)" filter="url(#shadow2)"/>
+                        <rect x="78" y="173" width="20" height="26" rx="10" fill="url(#skinGradient2)" class="finger ring" transform="rotate(43 89 186)" filter="url(#shadow2)"/>
+                        <rect x="79" y="173" width="18" height="24" rx="9" fill="url(#skinGradientLight2)" transform="rotate(43 89 185)"/>
+                        <ellipse cx="89" cy="170" rx="9" ry="16" fill="url(#skinGradient2)" class="finger ring-middle" transform="rotate(48 89 170)" filter="url(#shadow2)"/>
+                        <rect x="81" y="158" width="16" height="20" rx="8" fill="url(#skinGradient2)" class="finger ring-middle" transform="rotate(48 89 168)" filter="url(#shadow2)"/>
+                        <rect x="82" y="158" width="14" height="18" rx="7" fill="url(#skinGradientLight2)" transform="rotate(48 89 167)"/>
+                        <ellipse cx="87" cy="150" rx="8" ry="12" fill="url(#skinGradient2)" class="finger ring-tip" transform="rotate(53 87 150)" filter="url(#shadow2)"/>
+                        <ellipse cx="87" cy="150" rx="7" ry="10" fill="url(#skinGradientLight2)" transform="rotate(53 87 150)"/>
+                        
+                        <!-- Pinky (Closed) -->
+                        <ellipse cx="72" cy="185" rx="9" ry="16" fill="url(#skinGradient2)" class="finger pinky" transform="rotate(38 72 185)" filter="url(#shadow2)"/>
+                        <rect x="63" y="173" width="18" height="20" rx="9" fill="url(#skinGradient2)" class="finger pinky" transform="rotate(38 72 183)" filter="url(#shadow2)"/>
+                        <rect x="64" y="173" width="16" height="18" rx="8" fill="url(#skinGradientLight2)" transform="rotate(38 72 182)"/>
+                        <ellipse cx="72" cy="174" rx="8" ry="14" fill="url(#skinGradient2)" class="finger pinky-middle" transform="rotate(43 72 174)" filter="url(#shadow2)"/>
+                        <rect x="66" y="165" width="14" height="18" rx="7" fill="url(#skinGradient2)" class="finger pinky-middle" transform="rotate(43 72 174)" filter="url(#shadow2)"/>
+                        <rect x="67" y="165" width="12" height="16" rx="6" fill="url(#skinGradientLight2)" transform="rotate(43 72 173)"/>
+                        <ellipse cx="71" cy="155" rx="7" ry="10" fill="url(#skinGradient2)" class="finger pinky-tip" transform="rotate(48 71 155)" filter="url(#shadow2)"/>
+                        <ellipse cx="71" cy="155" rx="6" ry="8" fill="url(#skinGradientLight2)" transform="rotate(48 71 155)"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="animation-status">
+                <p class="status-text" data-i18n="closing-hand">Closing Hand...</p>
+                <div class="bluetooth-indicator">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                    </svg>
+                    <span id="close-command-text">Sending: CLOSE</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Light Grip Animation -->
+    <div id="hand-light-grip-screen" class="screen hand-animation-screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="lightGrip">Light Grip</h1>
+        </div>
+        <div class="hand-animation-container">
+            <div class="hand-wrapper">
+                <div class="hand-model hand-light-grip-animation" id="hand-light-grip-model">
+                    <video id="hand-light-grip-video" class="hand-video" autoplay loop muted playsinline style="display: none;">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-light-grip.mp4" type="video/mp4">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-light-grip.webm" type="video/webm">
+                    </video>
+                    <!-- Fallback SVG - Detailed Hand Model (Light Grip) -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <!-- Wrist Base -->
+                        <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc" class="wrist-base"/>
+                        <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc" class="wrist"/>
+                        <rect x="70" y="265" width="60" height="3" fill="#3b82f6" class="wrist-band"/>
+                        
+                        <!-- Palm -->
+                        <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574" class="palm"/>
+                        
+                        <!-- Thumb (Light Grip) -->
+                        <ellipse cx="125" cy="185" rx="12" ry="20" fill="#d4a574" class="finger thumb" transform="rotate(35 125 185)"/>
+                        <ellipse cx="132" cy="172" rx="10" ry="15" fill="#d4a574" class="finger thumb-tip" transform="rotate(25 132 172)"/>
+                        
+                        <!-- Index Finger (Light Grip) -->
+                        <rect x="110" y="160" width="18" height="30" rx="9" fill="#d4a574" class="finger index" transform="rotate(15 119 175)"/>
+                        <rect x="112" y="135" width="14" height="25" rx="7" fill="#d4a574" class="finger index-middle" transform="rotate(10 119 147)"/>
+                        <ellipse cx="118" cy="120" rx="7" ry="11" fill="#d4a574" class="finger index-tip"/>
+                        
+                        <!-- Middle Finger (Light Grip) -->
+                        <rect x="95" y="155" width="18" height="35" rx="9" fill="#d4a574" class="finger middle" transform="rotate(5 104 172)"/>
+                        <rect x="97" y="130" width="14" height="25" rx="7" fill="#d4a574" class="finger middle-middle"/>
+                        <ellipse cx="104" cy="115" rx="7" ry="11" fill="#d4a574" class="finger middle-tip"/>
+                        
+                        <!-- Ring Finger (Light Grip) -->
+                        <rect x="80" y="160" width="18" height="30" rx="9" fill="#d4a574" class="finger ring" transform="rotate(-5 89 175)"/>
+                        <rect x="82" y="135" width="14" height="25" rx="7" fill="#d4a574" class="finger ring-middle" transform="rotate(-10 89 147)"/>
+                        <ellipse cx="88" cy="120" rx="7" ry="11" fill="#d4a574" class="finger ring-tip"/>
+                        
+                        <!-- Pinky (Light Grip) -->
+                        <rect x="65" y="165" width="15" height="25" rx="7.5" fill="#d4a574" class="finger pinky" transform="rotate(-10 72.5 177)"/>
+                        <rect x="67" y="145" width="11" height="20" rx="5.5" fill="#d4a574" class="finger pinky-middle" transform="rotate(-15 72.5 155)"/>
+                        <ellipse cx="72" cy="130" rx="6" ry="9" fill="#d4a574" class="finger pinky-tip"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="animation-status">
+                <p class="status-text" data-i18n="light-gripping">Light Gripping...</p>
+                <div class="bluetooth-indicator">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                    </svg>
+                    <span id="light-grip-command-text">Sending: LIGHT_GRIP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strong Grip Animation -->
+    <div id="hand-strong-grip-screen" class="screen hand-animation-screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="strongGrip">Strong Grip</h1>
+        </div>
+        <div class="hand-animation-container">
+            <div class="hand-wrapper">
+                <div class="hand-model hand-strong-grip-animation" id="hand-strong-grip-model">
+                    <video id="hand-strong-grip-video" class="hand-video" autoplay loop muted playsinline style="display: none;">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-strong-grip.mp4" type="video/mp4">
+                        <source src="YOUR_VIDEO_PATH_HERE/hand-strong-grip.webm" type="video/webm">
+                    </video>
+                    <!-- Fallback SVG - Detailed Hand Model (Strong Grip) -->
+                    <svg viewBox="0 0 200 300" class="hand-svg">
+                        <!-- Wrist Base -->
+                        <ellipse cx="100" cy="280" rx="35" ry="20" fill="#f5f5dc" class="wrist-base"/>
+                        <rect x="65" y="260" width="70" height="30" rx="15" fill="#f5f5dc" class="wrist"/>
+                        <rect x="70" y="265" width="60" height="3" fill="#3b82f6" class="wrist-band"/>
+                        
+                        <!-- Palm -->
+                        <ellipse cx="100" cy="200" rx="45" ry="35" fill="#d4a574" class="palm"/>
+                        
+                        <!-- Thumb (Strong Grip) -->
+                        <ellipse cx="115" cy="195" rx="12" ry="20" fill="#d4a574" class="finger thumb" transform="rotate(70 115 195)"/>
+                        <ellipse cx="120" cy="182" rx="10" ry="15" fill="#d4a574" class="finger thumb-tip" transform="rotate(60 120 182)"/>
+                        
+                        <!-- Index Finger (Strong Grip) -->
+                        <rect x="110" y="175" width="18" height="20" rx="9" fill="#d4a574" class="finger index" transform="rotate(60 119 185)"/>
+                        <rect x="112" y="160" width="14" height="18" rx="7" fill="#d4a574" class="finger index-middle" transform="rotate(65 119 169)"/>
+                        <ellipse cx="117" cy="150" rx="7" ry="9" fill="#d4a574" class="finger index-tip" transform="rotate(70 117 150)"/>
+                        
+                        <!-- Middle Finger (Strong Grip) -->
+                        <rect x="95" y="180" width="18" height="25" rx="9" fill="#d4a574" class="finger middle" transform="rotate(65 104 192)"/>
+                        <rect x="97" y="165" width="14" height="22" rx="7" fill="#d4a574" class="finger middle-middle" transform="rotate(70 104 176)"/>
+                        <ellipse cx="102" cy="155" rx="7" ry="9" fill="#d4a574" class="finger middle-tip" transform="rotate(75 102 155)"/>
+                        
+                        <!-- Ring Finger (Strong Grip) -->
+                        <rect x="80" y="180" width="18" height="20" rx="9" fill="#d4a574" class="finger ring" transform="rotate(60 89 190)"/>
+                        <rect x="82" y="165" width="14" height="18" rx="7" fill="#d4a574" class="finger ring-middle" transform="rotate(65 89 174)"/>
+                        <ellipse cx="87" cy="155" rx="7" ry="9" fill="#d4a574" class="finger ring-tip" transform="rotate(70 87 155)"/>
+                        
+                        <!-- Pinky (Strong Grip) -->
+                        <rect x="65" y="180" width="15" height="18" rx="7.5" fill="#d4a574" class="finger pinky" transform="rotate(55 72.5 189)"/>
+                        <rect x="67" y="170" width="11" height="16" rx="5.5" fill="#d4a574" class="finger pinky-middle" transform="rotate(60 72.5 178)"/>
+                        <ellipse cx="71" cy="162" rx="6" ry="7" fill="#d4a574" class="finger pinky-tip" transform="rotate(65 71 162)"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="animation-status">
+                <p class="status-text" data-i18n="strong-gripping">Strong Gripping...</p>
+                <div class="bluetooth-indicator">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6.5 6.5l11 11M12 3v6m0 6v6M3 12h6m6 0h6"/>
+                    </svg>
+                    <span id="strong-grip-command-text">Sending: STRONG_GRIP</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calibration Screen -->
+    <div id="calibration-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="calibration-title">EMG Calibration</h1>
+        </div>
+        <div class="screen-content">
+            <div id="calibration-idle" class="calibration-idle">
+                <div class="calibration-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <p class="calibration-instruction" data-i18n="calibration-instruction">Follow the steps to calibrate your EMG sensors for optimal performance</p>
+                <button class="btn-primary btn-large" onclick="startCalibration()" data-i18n="start-calibration">Start Calibration</button>
+            </div>
+
+            <div id="calibration-active" class="calibration-active" style="display: none;">
+                <div class="calibration-step-card">
+                    <h2 id="step-title" class="step-title" data-i18n="step1">Step 1: Relax your muscle</h2>
+                    <p id="step-instruction" class="step-instruction" data-i18n="instruction1">Keep your muscle completely relaxed</p>
+                    <div id="progress-container" class="progress-container" style="display: none;">
+                        <p class="progress-label" data-i18n="measuring">Measuring...</p>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="emg-waveform-card">
+                    <h3 class="waveform-title">EMG Signal</h3>
+                    <div class="waveform-container">
+                        <canvas id="emg-waveform" width="300" height="128"></canvas>
+                        <div class="emg-value-display">
+                            <span id="emg-value">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button id="calibration-next-btn" class="btn-primary btn-large" onclick="nextCalibrationStep()" data-i18n="next-step">Next Step</button>
+            </div>
+
+            <div id="calibration-complete" class="calibration-complete" style="display: none;">
+                <div class="success-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+                <h2 class="success-title" data-i18n="calibration-complete">Calibration Complete!</h2>
+                <p class="success-message" data-i18n="calibration-success">Your profile has been saved successfully</p>
+                <button class="btn-primary btn-large" onclick="completeCalibration()" data-i18n="done">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Training Mode Screen -->
+    <div id="training-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="training-title">Balls Catch Game</h1>
+        </div>
+        <div class="screen-content training-content">
+            <div id="training-start" class="training-start">
+                <div class="trophy-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 9v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9M6 9h12"/>
+                    </svg>
+                </div>
+                <p class="training-instruction" data-i18n="catch-ball">Close your hand to catch!</p>
+                <button class="btn-primary btn-large training-start-btn" onclick="startTrainingGame()" data-i18n="start-game">Start Game</button>
+            </div>
+
+            <div id="training-game" class="training-game" style="display: none;">
+                <div class="game-stats">
+                    <div class="stat-card">
+                        <p class="stat-label" data-i18n="score">Score</p>
+                        <p class="stat-value" id="game-score">0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="stat-label" data-i18n="time">Time</p>
+                        <p class="stat-value" id="game-timer">60s</p>
+                    </div>
+                </div>
+
+                <div id="game-area" class="game-area">
+                    <div id="basket" class="basket"></div>
+                </div>
+
+                <div class="game-controls">
+                    <button class="btn-move" onclick="moveBasketLeft()">← Move Left</button>
+                    <button class="btn-move" onclick="moveBasketRight()">Move Right →</button>
+                </div>
+                <button class="btn-catch" onclick="catchBall()" data-i18n="close-hand-catch">Close Hand - Catch!</button>
+            </div>
+
+            <div id="training-end" class="training-end" style="display: none;">
+                <div class="trophy-icon-wrapper">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M6 9v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9M6 9h12"/>
+                    </svg>
+                </div>
+                <h2 class="game-over-title" data-i18n="game-over">Game Over!</h2>
+                <p class="final-score-label" data-i18n="final-score">Final Score</p>
+                <p class="final-score-value" id="final-score">0</p>
+                <button class="btn-primary btn-large" onclick="restartTrainingGame()" data-i18n="play-again">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Screen -->
+    <div id="progress-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="progress-title">Progress Tracking</h1>
+        </div>
+        <div class="screen-content">
+            <div class="progress-stats-grid">
+                <div class="progress-stat-card">
+                    <p class="stat-label-small" data-i18n="avg-accuracy">Avg Accuracy</p>
+                    <p class="stat-value-large">77%</p>
+                </div>
+                <div class="progress-stat-card">
+                    <p class="stat-label-small" data-i18n="avg-time">Avg Time</p>
+                    <p class="stat-value-large">697ms</p>
+                </div>
+                <div class="progress-stat-card">
+                    <p class="stat-label-small" data-i18n="total-grasps">Total Grasps</p>
+                    <p class="stat-value-large">140</p>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title" data-i18n="accuracy">Accuracy</h3>
+                <canvas id="accuracy-chart" width="300" height="200"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title" data-i18n="reaction-time">Reaction Time (ms)</h3>
+                <canvas id="reaction-chart" width="300" height="200"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3 class="chart-title" data-i18n="successful-grasps">Successful Grasps</h3>
+                <canvas id="grasps-chart" width="300" height="200"></canvas>
+            </div>
+
+            <div class="badges-card">
+                <h3 class="badges-title" data-i18n="badges">Achievements</h3>
+                <div class="badges-grid">
+                    <div class="badge-item earned">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                        <p>Steady Control</p>
+                    </div>
+                    <div class="badge-item earned">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <p>Fast Reflex</p>
+                    </div>
+                    <div class="badge-item earned">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <p>Consistent</p>
+                    </div>
+                    <div class="badge-item locked">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <p>Improving</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settings-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="settings-title">Settings</h1>
+        </div>
+        <div class="screen-content">
+            <div class="settings-card">
+                <div class="settings-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="2" y1="12" x2="22" y2="12"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                    <h3 data-i18n="language">Language</h3>
+                </div>
+                <select id="language-select" class="settings-select" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
+                    <option value="fr">Français</option>
+                </select>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                    <h3 data-i18n="mode">Mode</h3>
+                </div>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <span data-i18n="child-mode">Child Mode</span>
+                        <input type="checkbox" id="child-mode-toggle" checked onchange="toggleChildMode(this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                    <h3 data-i18n="emg-sensitivity">EMG Sensitivity</h3>
+                </div>
+                <select id="sensitivity-select" class="settings-select" onchange="changeSensitivity(this.value)">
+                    <option value="low" data-i18n="low">Low</option>
+                    <option value="medium" data-i18n="medium" selected>Medium</option>
+                    <option value="high" data-i18n="high">High</option>
+                </select>
+            </div>
+
+            <div class="settings-card">
+                <div class="settings-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <h3 data-i18n="battery-alerts">Battery Alerts</h3>
+                </div>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <span data-i18n="alert-20">Alert at 20%</span>
+                        <input type="checkbox" id="alert-20" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <label class="toggle-label">
+                        <span data-i18n="alert-10">Alert at 10%</span>
+                        <input type="checkbox" id="alert-10" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logs Screen -->
+    <div id="logs-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="logs-title">Activity Logs</h1>
+        </div>
+        <div class="screen-content">
+            <div class="logs-list" id="logs-list">
+                <!-- Logs will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="about-screen" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="showScreen('control-screen')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <h1 class="screen-title-text" data-i18n="about-title">About</h1>
+        </div>
+        <div class="screen-content">
+            <div class="about-app-card">
+                <div class="app-logo-large">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2v20M2 12h20"/>
+                    </svg>
+                </div>
+                <h2>SmartHand Trainer</h2>
+                <p class="version-text" data-i18n="version">Version 1.0.0</p>
+            </div>
+
+            <div class="about-card">
+                <p data-i18n="description">An assistive application that helps users control and train with EMG-based prosthetic hands through interactive games and exercises.</p>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                    </svg>
+                    <h3 data-i18n="how-to-use">How to Use</h3>
+                </div>
+                <div class="steps-list">
+                    <p data-i18n="step1">1. Connect your prosthetic hand via Bluetooth</p>
+                    <p data-i18n="step2">2. Calibrate the EMG sensors for your muscle signals</p>
+                    <p data-i18n="step3">3. Practice control with interactive training games</p>
+                    <p data-i18n="step4">4. Track your progress and improve over time</p>
+                </div>
+            </div>
+
+            <div class="about-card safety-card">
+                <div class="about-card-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <h3 data-i18n="safety">Safety Information</h3>
+                </div>
+                <p data-i18n="safety-info">Always follow your healthcare provider's instructions. If you experience discomfort, stop using the device and consult your doctor.</p>
+            </div>
+
+            <div class="about-card">
+                <div class="about-card-header">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <h3 data-i18n="support">Contact Support</h3>
+                </div>
+                <button class="btn-primary btn-large" onclick="contactSupport()" data-i18n="support-email">support@smarthand.com</button>
+            </div>
+
+            <div class="made-with">
+                <p data-i18n="made-with">Made with</p>
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <p data-i18n="for-users">for prosthetic hand users worldwide</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Control Modal -->
+    <div id="voice-modal" class="voice-modal" style="display: none;">
+        <div class="voice-modal-content">
+            <div class="voice-modal-header">
+                <h3>Voice Control</h3>
+                <button class="close-btn" onclick="closeVoiceControl()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="voice-control-content">
+                <button id="voice-mic-btn" class="voice-mic-button" onclick="startVoiceListening()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                        <line x1="12" y1="19" x2="12" y2="23"/>
+                        <line x1="8" y1="23" x2="16" y2="23"/>
+                    </svg>
+                </button>
+                <p id="voice-status" class="voice-status" data-i18n="tap-to-speak">Tap to speak</p>
+                <div id="voice-commands" class="voice-commands">
+                    <p class="voice-commands-label" data-i18n="supported-commands">Supported Commands:</p>
+                    <div class="voice-commands-list">
+                        <span data-i18n="cmd-open">Open</span>
+                        <span data-i18n="cmd-close">Close</span>
+                        <span data-i18n="cmd-grip">Grip</span>
+                        <span data-i18n="cmd-stop">Stop</span>
+                    </div>
+                </div>
+                <div id="voice-recognized" class="voice-recognized" style="display: none;">
+                    <p class="voice-recognized-label" data-i18n="recognized">Command recognized:</p>
+                    <p class="voice-recognized-command" id="recognized-command"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
