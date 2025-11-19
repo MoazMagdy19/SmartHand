@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Splash Screen -->
     <div id="splash-screen" class="screen active">
         <div class="splash-container">
             <div class="splash-content">
@@ -26,7 +25,6 @@
         </div>
     </div>
 
-    <!-- Bluetooth Connection Screen -->
     <div id="connection-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('splash-screen')">
@@ -64,7 +62,6 @@
         </div>
     </div>
 
-    <!-- Control Panel Screen -->
     <div id="control-screen" class="screen">
         <div class="control-header">
             <div class="connection-status-card">
@@ -179,7 +176,6 @@
             </div>
         </div>
 
-        <!-- Voice Control Button -->
         <button class="voice-btn" id="voice-btn" onclick="toggleVoiceControl()">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
@@ -190,8 +186,7 @@
         </button>
     </div>
 
-    <!-- Hand Animation Screens -->
-    <!-- Open Hand Animation -->
+   
     <div id="hand-open-screen" class="screen hand-animation-screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -204,7 +199,6 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-open-animation" id="hand-open-model">
-                    <!-- Hand Video for Open Animation -->
                     <video class="hand-video" id="hand-open-video" autoplay muted loop playsinline>
                         <source src="WhatsApp Video 2025-11-10 at 00.28.01_bcb250f2.mp4" type="video/mp4">
                         Your browser does not support the video tag.
@@ -223,7 +217,6 @@
         </div>
     </div>
 
-    <!-- Close Hand Animation -->
     <div id="hand-close-screen" class="screen hand-animation-screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -236,7 +229,6 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-close-animation" id="hand-close-model">
-                    <!-- Hand Video for Close Animation -->
                     <video class="hand-video" id="hand-close-video" autoplay muted loop playsinline>
                         <source src="WhatsApp Video 2025-11-10 at 00.32.02_6aec1fd8.mp4" type="video/mp4">
                         Your browser does not support the video tag.
@@ -255,7 +247,6 @@
         </div>
     </div>
 
-    <!-- Light Grip Animation -->
     <div id="hand-light-grip-screen" class="screen hand-animation-screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -268,7 +259,6 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-light-grip-animation" id="hand-light-grip-model">
-                    <!-- Hand Video for Light Grip Animation -->
                     <video class="hand-video" id="hand-light-grip-video" autoplay muted loop playsinline>
                         <source src="WhatsApp Video 2025-11-10 at 00.23.32_3a8cd82d.mp4" type="video/mp4">
                         Your browser does not support the video tag.
@@ -287,7 +277,6 @@
         </div>
     </div>
 
-    <!-- Strong Grip Animation -->
     <div id="hand-strong-grip-screen" class="screen hand-animation-screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -300,7 +289,6 @@
         <div class="hand-animation-container">
             <div class="hand-wrapper">
                 <div class="hand-model hand-strong-grip-animation" id="hand-strong-grip-model">
-                    <!-- Hand Video for Strong Grip Animation -->
                     <video class="hand-video" id="hand-strong-grip-video" autoplay muted loop playsinline>
                         <source src="WhatsApp Video 2025-11-10 at 00.23.32_3a8cd82d.mp4" type="video/mp4">
                         Your browser does not support the video tag.
@@ -319,7 +307,6 @@
         </div>
     </div>
 
-    <!-- Calibration Screen -->
     <div id="calibration-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -378,7 +365,6 @@
         </div>
     </div>
 
-    <!-- Training Mode Screen -->
     <div id="training-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -436,7 +422,6 @@
         </div>
     </div>
 
-    <!-- Progress Screen -->
     <div id="progress-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -511,7 +496,6 @@
         </div>
     </div>
 
-    <!-- Settings Screen -->
     <div id="settings-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -593,7 +577,6 @@
         </div>
     </div>
 
-    <!-- Logs Screen -->
     <div id="logs-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -605,12 +588,10 @@
         </div>
         <div class="screen-content">
             <div class="logs-list" id="logs-list">
-                <!-- Logs will be populated by JavaScript -->
             </div>
         </div>
     </div>
 
-    <!-- About Screen -->
     <div id="about-screen" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="showScreen('control-screen')">
@@ -682,7 +663,6 @@
         </div>
     </div>
 
-    <!-- Voice Control Modal -->
     <div id="voice-modal" class="voice-modal" style="display: none;">
         <div class="voice-modal-content">
             <div class="voice-modal-header">
