@@ -1,4 +1,3 @@
-// App State
 let appState = {
     isConnected: false,
     batteryLevel: 85,
@@ -10,7 +9,6 @@ let appState = {
     deviceName: ''
 };
 
-// Game State
 let gameState = {
     started: false,
     score: 0,
@@ -21,7 +19,6 @@ let gameState = {
     confetti: []
 };
 
-// Calibration State
 let calibrationState = {
     currentStep: 'idle',
     measuring: false,
@@ -29,20 +26,17 @@ let calibrationState = {
     progress: 0
 };
 
-// Voice Control State
 let voiceState = {
     listening: false,
     recognizedCommand: null
 };
 
-// Intervals and Animations
 let gameTimerInterval = null;
 let ballSpawnInterval = null;
 let ballMoveInterval = null;
 let emgWaveformInterval = null;
 let calibrationProgressInterval = null;
 
-// Translations
 const translations = {
     en: {
         'connection-title': 'Connect Device',
@@ -316,7 +310,6 @@ const translations = {
     }
 };
 
-// Initialize App
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         showScreen('connection-screen');
@@ -327,7 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateLanguage(appState.language);
 });
 
-// Screen Navigation
 function showScreen(screenId) {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
@@ -347,7 +339,6 @@ function showScreen(screenId) {
     }
 }
 
-// Bluetooth Connection
 function startBluetoothScan() {
     const deviceList = document.getElementById('device-list');
     const scanningIndicator = document.getElementById('scanning-indicator');
@@ -408,7 +399,6 @@ function updateDeviceName(name) {
     }
 }
 
-// Control Panel
 function sendCommand(command, event) {
     const bluetoothCommands = {
         'open': 'OPEN',
@@ -458,7 +448,6 @@ function updateGripStrength(value) {
     console.log(`Grip strength: ${value}%`);
 }
 
-// Calibration
 function startCalibration() {
     calibrationState.currentStep = 'step1';
     document.getElementById('calibration-idle').style.display = 'none';
@@ -564,7 +553,6 @@ function resetCalibration() {
     document.getElementById('calibration-complete').style.display = 'none';
 }
 
-// EMG Waveform
 function startEMGWaveform() {
     const canvas = document.getElementById('emg-waveform');
     if (!canvas) return;
@@ -608,7 +596,6 @@ function startEMGWaveform() {
     }, 50);
 }
 
-// Training Game
 function startTrainingGame() {
     gameState.started = true;
     gameState.score = 0;
@@ -777,7 +764,6 @@ function updateGameStats() {
     document.getElementById('game-timer').textContent = gameState.timeLeft + 's';
 }
 
-// Progress Charts
 function initProgressCharts() {
     const weeklyData = [
         { day: 'Mon', accuracy: 65, reactionTime: 850, grasps: 12 },
@@ -884,7 +870,6 @@ function drawBarChart(canvasId, data, key, color) {
     });
 }
 
-// Settings
 function changeLanguage(lang) {
     appState.language = lang;
     updateLanguage(lang);
@@ -922,7 +907,6 @@ function changeSensitivity(value) {
     addLog('settings', 'info', `EMG Sensitivity set to ${value}`);
 }
 
-// Logs
 function initializeLogs() {
     const mockLogs = [
         { type: 'bluetooth', status: 'success', message: 'Connected to SmartHand Pro V2', timestamp: '2025-11-08 14:32' },
@@ -1179,12 +1163,10 @@ function handleVoiceCommand(command) {
     }
 }
 
-// About
 function contactSupport() {
     window.open(`mailto:${getTranslation('support-email')}`, '_blank');
 }
 
-// Hand Animation Reset
 function resetHandAnimation(screenId) {
     const handModel = document.querySelector(`#${screenId} .hand-model`);
     if (handModel?.classList) {
@@ -1231,12 +1213,10 @@ function resetHandAnimation(screenId) {
     }
 }
 
-// Utility Functions
 function getTranslation(key) {
     return translations[appState.language][key] || key;
 }
 
-// Cleanup
 window.addEventListener('beforeunload', () => {
     clearInterval(gameTimerInterval);
     clearInterval(ballSpawnInterval);
